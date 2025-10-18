@@ -1,0 +1,116 @@
+# .github/dependabot.yml
+version: 2
+
+updates:
+  # ────────────────────────────────────────────────────────────────────────────
+  # 1) JS/TS dependencies (Yarn or npm) — works with Yarn workspaces
+  #    - Dependabot uses the "npm" ecosystem even for Yarn; it reads your lockfile
+  #    - If you have multiple lockfiles (e.g., packages/*/package.json + lockfile),
+  #      add additional entries with their "directory".
+  # ────────────────────────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/"                      # repo root; works with Yarn workspaces if lockfile is here
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+      timezone: "Europe/Lisbon"
+    open-pull-requests-limit: 15
+    # For semver ranges in package.json, bump only when needed to resolve alerts/compat.
+    versioning-strategy: increase-if-necessary
+    rebase-strategy: auto
+    reviewers:
+      - "diogoribeiro7"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "typescript"
+    # Group minor/patch together to reduce PR noise; keep majors isolated.
+    groups:
+      app-minor-and-patch:
+        patterns:
+          - "*"                         # all deps
+        update-types:
+          - "minor"
+          - "patch"
+      app-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+    # Keep commit messages tidy
+    commit-message:
+      prefix: "deps(npm)"
+      include: "scope"
+
+    # Optional ignores. Uncomment if you need to pin certain libs.
+    # ignore:
+    #   - dependency-name: "typescript"
+    #     update-types: ["version-update:semver-major"]
+
+  # (Optional) If you carry an additional lockfile in a subpackage,
+  # duplicate the block above and change "directory" to that path.
+  # - package-ecosystem: "npm"
+  #   directory: "/packages/webapp"
+  #   ...
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 2) Lockfile maintenance (no package.json range changes)
+  #    - Keeps yarn.lock/package-lock.json fresh even if no new semver range is required
+  # ────────────────────────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "sunday"
+      time: "04:00"
+      timezone: "Europe/Lisbon"
+    open-pull-requests-limit: 2
+    versioning-strategy: lockfile-only
+    rebase-strategy: auto
+    reviewers:
+      - "diogoribeiro7"
+    labels:
+      - "dependencies"
+      - "lockfile"
+    commit-message:
+      prefix: "chore(lockfile)"
+      include: "scope"
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 3) GitHub Actions
+  # ────────────────────────────────────────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "05:30"
+      timezone: "Europe/Lisbon"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "diogoribeiro7"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    # If you prefer floating @vX tags over pinned SHAs, leave as-is.
+    # (Note: security best practice is to pin SHAs; choose based on your policy.)
+    commit-message:
+      prefix: "ci(actions)"
+      include: "scope"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Registries (optional):
+# If you use GitHub Packages / private npm registries, define them here and
+# then add `registries: ["my-ghcr", "my-npm"]` + an `allow:` stanza per update.
+# See: https://docs.github.com/code-security/dependabot/dependabot-security-updates/configuration-options-for-the-dependabot.yml-file#registries
+# registries:
+#   my-npm:
+#     type: "npm-registry"
+#     url: "https://npm.pkg.github.com"
+#     token: "${{secrets.DEPENDABOT_NPM_TOKEN}}"
+#
+# Notes:
+# - Dependabot cannot update dependencies declared as "git+ssh" or private Git URLs
+#   it cannot access. Prefer published packages or an authenticated registry.
+# ──────────────────────────────────────────────────────────────────────────────

@@ -17,7 +17,7 @@ updates:
       timezone: "Europe/Lisbon"
     open-pull-requests-limit: 15
     # For semver ranges in package.json, bump only when needed to resolve alerts/compat.
-    versioning-strategy: increase-if-necessary
+    versioning-strategy: auto
     rebase-strategy: auto
     reviewers:
       - "diogoribeiro7"
